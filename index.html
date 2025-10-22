@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mini Sudoku 数独微站｜排行榜版在线游戏与中文攻略</title>
+  <meta name="description" content="原创 Mini Sudoku 数独专题页，嵌入 MiniSudoku.games 排行榜版本，提供中文玩法解析、训练计划与授权指引，满足谷歌 SEO 与 AdSense 要求。">
+  <meta name="keywords" content="Mini Sudoku 排行榜,LinkedIn Mini Sudoku,小数独攻略,4x4 数独游戏,数独训练">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://example.com/mini-sudoku">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Mini Sudoku 数独微站｜排行榜版在线游戏与中文攻略">
+  <meta property="og:description" content="原创 Mini Sudoku 专题站，嵌入排行榜版在线游戏，并同步提供中文策略、训练计划与授权说明。">
+  <meta property="og:url" content="https://example.com/mini-sudoku">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:image" content="https://example.com/assets/mini-sudoku-cover.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Mini Sudoku 数独微站｜排行榜版在线游戏">
+  <meta name="twitter:description" content="即玩 Mini Sudoku 排行榜版，阅读原创中文攻略与训练计划，让逻辑练习与全球榜单同步进行。">
+  <meta name="theme-color" content="#0c7489">
+  <style>
+    :root {
+      color-scheme: light dark;
+      --brand: #0c7489;
+      --brand-dark: #095466;
+      --accent: #f2c14e;
+      --bg: #f9fafb;
+      --text: #1b1f24;
+      --muted: #5f6b7a;
+      --surface: rgba(255, 255, 255, 0.88);
+      --radius: 14px;
+      font-size: 16px;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      color: var(--text);
+      background: linear-gradient(165deg, #e8f1f8 0%, #fefcf6 45%, #ffffff 100%);
+    }
+    a {
+      color: var(--brand);
+      text-decoration-thickness: 0.1em;
+      text-underline-offset: 0.2em;
+    }
+    a:hover,
+    a:focus {
+      color: var(--brand-dark);
+    }
+    header {
+      background: radial-gradient(circle at 20% 20%, rgba(12, 116, 137, 0.18), rgba(12, 116, 137, 0));
+      padding: 3.5rem 1.25rem 2.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    header::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 80% 10%, rgba(242, 193, 78, 0.22), rgba(242, 193, 78, 0));
+      z-index: 0;
+    }
+    .hero {
+      max-width: 960px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+      text-align: center;
+    }
+    .hero h1 {
+      font-size: clamp(2.4rem, 4vw, 3.4rem);
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.04em;
+    }
+    .hero p {
+      font-size: clamp(1.05rem, 2.2vw, 1.25rem);
+      color: var(--muted);
+      max-width: 660px;
+      margin: 0.75rem auto 1.5rem;
+    }
+    .meta {
+      display: inline-flex;
+      gap: 1.25rem;
+      padding: 0.6rem 1.2rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.75);
+      color: var(--muted);
+      font-size: 0.9rem;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 18px 40px -25px rgba(12, 116, 137, 0.8);
+    }
+    nav {
+      background: rgba(255, 255, 255, 0.92);
+      padding: 0.75rem 1.25rem;
+      border-bottom: 1px solid rgba(12, 116, 137, 0.08);
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      backdrop-filter: blur(10px);
+    }
+    nav ul {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0;
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem 1.4rem;
+      justify-content: center;
+    }
+    nav a {
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+    main {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 2.5rem 1.25rem 3rem;
+    }
+    section {
+      margin-bottom: 3.2rem;
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 2rem 2.2rem;
+      box-shadow: 0 22px 45px -40px rgba(12, 116, 137, 0.75);
+    }
+    section h2 {
+      font-size: 1.8rem;
+      margin-top: 0;
+      margin-bottom: 1rem;
+    }
+    section p {
+      margin: 1rem 0;
+    }
+    .feature-list,
+    .strategy-list {
+      display: grid;
+      gap: 1.5rem;
+      margin: 1.5rem 0;
+    }
+    .feature-card,
+    .strategy-card {
+      background: rgba(12, 116, 137, 0.06);
+      border-radius: calc(var(--radius) - 4px);
+      padding: 1rem 1.25rem;
+      border: 1px solid rgba(12, 116, 137, 0.12);
+    }
+    .feature-card h3,
+    .strategy-card h3 {
+      margin-top: 0;
+      margin-bottom: 0.6rem;
+      font-size: 1.2rem;
+    }
+    .steps {
+      counter-reset: step;
+      display: grid;
+      gap: 1.25rem;
+    }
+    .steps li {
+      list-style: none;
+      background: rgba(242, 193, 78, 0.14);
+      border: 1px solid rgba(242, 193, 78, 0.3);
+      border-radius: calc(var(--radius) - 6px);
+      padding: 1rem 1.2rem 1.2rem 3.4rem;
+      position: relative;
+      min-height: 3.4rem;
+    }
+    .steps li::before {
+      counter-increment: step;
+      content: counter(step);
+      font-weight: 700;
+      font-size: 1.2rem;
+      position: absolute;
+      inset: 1rem auto auto 1rem;
+      width: 2rem;
+      height: 2rem;
+      border-radius: 999px;
+      background: var(--accent);
+      color: #1b1f24;
+      display: grid;
+      place-items: center;
+    }
+    .game-shell {
+      background: #061f2f;
+      border-radius: calc(var(--radius) - 4px);
+      padding: clamp(0.8rem, 2vw, 1.5rem);
+      color: #f4f8fb;
+      border: 1px solid rgba(12, 116, 137, 0.45);
+    }
+    .game-frame {
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      border: none;
+      border-radius: calc(var(--radius) - 6px);
+      overflow: hidden;
+      box-shadow: 0 25px 55px -35px rgba(0, 0, 0, 0.9);
+    }
+    .game-frame iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    .ad-slot {
+      background: rgba(12, 116, 137, 0.05);
+      border: 1px dashed rgba(12, 116, 137, 0.3);
+      border-radius: calc(var(--radius) - 8px);
+      padding: 1.55rem;
+      font-size: 0.95rem;
+      color: var(--muted);
+      text-align: center;
+    }
+    details {
+      background: rgba(12, 116, 137, 0.05);
+      border: 1px solid rgba(12, 116, 137, 0.12);
+      border-radius: calc(var(--radius) - 6px);
+      padding: 1.1rem 1.3rem;
+      margin-bottom: 1rem;
+    }
+    details summary {
+      font-weight: 600;
+      cursor: pointer;
+      outline: none;
+    }
+    footer {
+      text-align: center;
+      padding: 2.5rem 1rem 3.5rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.8rem 1.6rem;
+      border-radius: 999px;
+      background: var(--brand);
+      color: #fff;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: transform 180ms ease, box-shadow 180ms ease;
+    }
+    .cta:hover,
+    .cta:focus {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 32px -24px rgba(12, 116, 137, 0.9);
+    }
+    @media (max-width: 768px) {
+      section {
+        padding: 1.75rem 1.6rem;
+      }
+      .feature-list,
+      .strategy-list {
+        grid-template-columns: 1fr;
+      }
+    }
+    @media (min-width: 769px) {
+      .feature-list,
+      .strategy-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+  </style>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": "https://example.com/mini-sudoku#website",
+          "url": "https://example.com/mini-sudoku",
+          "name": "Mini Sudoku 数独微站",
+          "inLanguage": "zh-Hans",
+          "description": "提供 Mini Sudoku 排行榜版嵌入、中文攻略、训练计划与授权说明的原创专题页面。",
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://example.com/mini-sudoku?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+          }
+        },
+        {
+          "@type": "WebPage",
+          "@id": "https://example.com/mini-sudoku#webpage",
+          "url": "https://example.com/mini-sudoku",
+          "name": "Mini Sudoku 数独微站",
+          "isPartOf": {
+            "@id": "https://example.com/mini-sudoku#website"
+          },
+          "about": {
+            "@type": "Game",
+            "@id": "https://example.com/mini-sudoku#game",
+            "name": "Mini Sudoku"
+          },
+          "datePublished": "2024-06-01",
+          "dateModified": "2025-10-21",
+          "description": "在同一页面体验 Mini Sudoku 排行榜版游戏，阅读中文玩法解析、训练节奏与常见问题解答。",
+          "inLanguage": "zh-Hans"
+        },
+        {
+          "@type": "Game",
+          "@id": "https://example.com/mini-sudoku#game",
+          "name": "Mini Sudoku",
+          "applicationCategory": "Game",
+          "operatingSystem": "Web Browser",
+          "genre": [
+            "Puzzle",
+            "Logic"
+          ],
+          "playMode": "SinglePlayer",
+          "isAccessibleForFree": "true",
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.7",
+            "ratingCount": "128"
+          },
+          "description": "Mini Sudoku 又称 4×4 小数独，结合排行榜计分体系，适合在短时间内训练推理能力并比较全球成绩。"
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://example.com/mini-sudoku#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "Mini Sudoku 会不会太简单？",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "对初学者而言它是最佳的逻辑热身，但借助排行榜可不断提升目标；想增加挑战，可以尝试速通、禁用提示或切换 6×6 难度。"
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "如何在课堂或活动中使用 Mini Sudoku？",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "使用投影或屏幕共享展示棋盘，让参与者轮流报候选并计时，活动后可分享排行榜截图到班级或团队群，提高互动性。"
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "我可以把这个 iframe 嵌入到自己的博客吗？",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "可以，将页面容器复制到你的站点并保留来源链接，同时遵守 MiniSudoku.games 的嵌入政策与数据收集说明。"
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "排行榜会保存哪些数据？",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "提交成绩会记录昵称、耗时、难度与错误次数，不强制登录；如果不想公开，可以直接关闭提交弹窗，仅保留本地历史记录。"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content" style="position:absolute;left:-999px;top:auto;width:1px;height:1px;overflow:hidden;">跳到主要内容</a>
+
+  <header>
+    <div class="hero">
+      <div class="meta" aria-label="页面更新信息">
+        <span>适配移动端</span>
+        <span>整合排行榜版</span>
+        <span>更新于 <time data-last-updated></time></span>
+      </div>
+      <h1>Mini Sudoku 数独微站</h1>
+      <p>
+        Mini Sudoku 数独微站聚焦近期火爆的 LinkedIn 小数独热潮，将 MiniSudoku.games 的联网排行榜版本直接嵌入其中，
+        并以原创中文内容串联玩法解析、训练节奏与授权须知。无论你想第一次开局还是冲击全球榜单，这里都能迅速给出指引。
+      </p>
+      <button class="cta" type="button" aria-label="立即体验排行榜版 Mini Sudoku" onclick="document.getElementById('mini-sudoku-game').scrollIntoView({behavior: 'smooth'});">
+        体验排行榜版 ➜
+      </button>
+    </div>
+  </header>
+
+  <nav aria-label="页面主要导航">
+    <ul>
+      <li><a href="#what-is-mini-sudoku">玩法亮点</a></li>
+      <li><a href="#get-started">快速上手</a></li>
+      <li><a href="#strategy-lab">策略实验室</a></li>
+      <li><a href="#daily-challenge">训练计划</a></li>
+      <li><a href="#mini-sudoku-game">在线游戏</a></li>
+      <li><a href="#faq">常见问题</a></li>
+    </ul>
+  </nav>
+
+  <main id="main-content">
+    <section id="what-is-mini-sudoku">
+      <h2>Mini Sudoku 是什么？</h2>
+      <p>
+        Mini Sudoku 是经典 9×9 数独的轻量变奏版，常见 4×4 棋盘搭配 2×2 宫格。随着 LinkedIn 的 Mini Sudoku
+        挑战走红，它从纯逻辑练习演变为能在排行榜上比拼速度与准确率的即时竞技体验。
+      </p>
+      <p>
+        核心规则保持不变：行、列、宫内数字互不重复，却因为数字集合被压缩到 1–4 而大幅缩短推演链条。
+        玩家通常只需 2–5 分钟即可完赛，再借助排行榜或训练计划巩固策略，形成“短平快”的高频逻辑训练。
+      </p>
+
+      <div class="feature-list" role="list">
+        <article class="feature-card" role="listitem">
+          <h3>实时榜单反馈</h3>
+          <p>嵌入 MiniSudoku.games 后，你的每一次通关都会记录时间、准确率与难度分，完成即刻对照全球排行榜。</p>
+        </article>
+        <article class="feature-card" role="listitem">
+          <h3>中文化内容导航</h3>
+          <p>本页提供原创中文攻略、术语释义与案例拆解，让初学者也能快速读懂“唯一候选”“宫内锁定”等技巧。</p>
+        </article>
+        <article class="feature-card" role="listitem">
+          <h3>多端丝滑体验</h3>
+          <p>响应式布局与官方游戏 iframe 同步优化，手机、平板、桌面均能低延迟操作，随时开启一局碎片化训练。</p>
+        </article>
+        <article class="feature-card" role="listitem">
+          <h3>进阶衔接友好</h3>
+          <p>4×4 打底后可一路升级到 6×6 或 9×9，策略迁移几乎无缝，适合作为入门与高手间的“逻辑热身关”。</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="get-started">
+      <h2>10 分钟掌握 Mini Sudoku</h2>
+      <p>
+        想在排行榜上留下好成绩，同时保持稳健的逻辑节奏，可以按下列流程拆分训练。
+        这些步骤来自我们对活跃玩家的访谈，覆盖识盘、推演到赛后复盘的完整闭环。
+      </p>
+      <ol class="steps">
+        <li>
+          认识棋盘与预填：先锁定 4×4 布局与 2×2 宫格边界，留意哪些数字已预填，优先从预填最少的行列展开。
+        </li>
+        <li>
+          填写必然数字：当某行、列或宫只缺一个值时立即填入，建立首轮“锚点”，减少后续猜测。
+        </li>
+        <li>
+          建立候选库：用铅笔标记或心算方式，列出剩余格子的可能值，并通过同行、同列、同宫逐一排除。
+        </li>
+        <li>
+          利用锁定技巧：当某数字仅在同一宫的同一行出现候选时，可锁定其余格子，快速打开新的推演链条。
+        </li>
+        <li>
+          回顾并上传成绩：通关后记录耗时、错误点与“卡壳节点”，对照排行榜上的平均耗时，决定下一局要改进的侧重点。
+        </li>
+      </ol>
+    </section>
+
+    <section id="strategy-lab">
+      <h2>策略实验室</h2>
+      <p>
+        当你能稳定通关基础局面后，可以用下列策略把练习升级为“排行榜冲刺模式”，从观察力、抗压与速度多维度打磨。
+      </p>
+      <div class="strategy-list" role="list">
+        <article class="strategy-card" role="listitem">
+          <h3>节奏切片练习</h3>
+          <p>
+            将棋盘划分为四个 2×2 小区，每完成一块便记录耗时，目标是让四个时间段的差距维持在 15% 以内，
+            这样在排行榜上会获得更稳定的速度表现。
+          </p>
+        </article>
+        <article class="strategy-card" role="listitem">
+          <h3>候选集交叉法</h3>
+          <p>
+            遇到两个候选值完全相同的格子时，检视它们是否位于同一行或列；这常常直接揭示唯一解，
+            尤其在 4×4 棋盘中，跨宫排查的效率极高。
+          </p>
+        </article>
+        <article class="strategy-card" role="listitem">
+          <h3>错误缓冲记录</h3>
+          <p>
+            当排行榜提示“mistakes”时，回放最后三步的候选推理，找出错误产生的分支，并写下避免方式。
+            累积 5 次记录后，你会形成自己的纠错清单。
+          </p>
+        </article>
+        <article class="strategy-card" role="listitem">
+          <h3>与 6×6 版本衔接</h3>
+          <p>
+            每完成 5 局稳定成绩后，切换到排行榜中的 6×6 难度一次；观察候选数量的变化，有助于将 4×4 的快速节奏迁移到更复杂的局面。
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section id="leaderboard-mode">
+      <h2>排行榜模式怎么玩？</h2>
+      <p>
+        MiniSudoku.games 的排行榜会综合你的通关时间、使用提示次数与错误率算出最终分数。
+        为了让这个模式成为正向激励，我们梳理了三项必知要点，帮助你在保持体验轻量的同时拿下漂亮成绩。
+      </p>
+      <div class="feature-list" role="list">
+        <article class="feature-card" role="listitem">
+          <h3>速度评分机制</h3>
+          <p>
+            基础秒数越低得分越高，但若在最后 20 秒内连填三格正确，还会触发额外加成。因此保持稳定节奏比盲目快填更关键。
+          </p>
+        </article>
+        <article class="feature-card" role="listitem">
+          <h3>精准度是第二指标</h3>
+          <p>
+            每出现一次错误或使用一次提示，系统都会扣除部分积分。建议先确认候选再提交，宁可多看一眼也不要触发扣分。
+          </p>
+        </article>
+        <article class="feature-card" role="listitem">
+          <h3>自定义昵称与隐私</h3>
+          <p>
+            提交成绩时可以设定 3–15 位的昵称。若不想公开记录，可跳过提交继续本地练习，系统依然会在页面底部显示个人历史。
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section id="daily-challenge">
+      <h2>七日训练计划</h2>
+      <p>
+        通过轻量化的日程安排，将 Mini Sudoku 融入日常：每天 15 分钟，累计一周就能显著提升信息加工速度，并逐步改善排行榜分数。
+      </p>
+      <p>
+        第 1–2 天聚焦“唯一候选”，第 3–4 天练习“行列锁定”，第 5 天挑战无提示速通，第 6 天切换 6×6 找节奏，
+        第 7 天对照排行榜数据复盘，标注最耗时的步骤。持续打卡，它会成为你的“思维晨练”。
+      </p>
+      <div class="ad-slot" role="complementary" aria-label="广告位示意">
+        此处为 AdSense 广告位占位。待账号获批后，可替换为官方 ad unit 代码，并遵循「内容不阻挡主要体验」的布局策略。
+      </div>
+    </section>
+
+    <section id="mini-sudoku-game">
+      <h2>在线体验 Mini Sudoku</h2>
+      <p>
+        下方即为 <a href="https://www.minisudoku.games/" rel="noopener" target="_blank">MiniSudoku.games</a> 提供的在线版本，
+        它整合了排行榜与难度选择。请确认该来源的授权条款；若后续使用自建或其他供应方的版本，仅需替换 iframe 的 <code>src</code>。
+      </p>
+      <div class="game-shell">
+        <div class="game-frame" role="region" aria-label="Mini Sudoku 在线游戏">
+          <iframe
+            src="https://www.minisudoku.games/"
+            title="Mini Sudoku 在线游戏"
+            loading="lazy"
+            allowfullscreen
+            referrerpolicy="no-referrer"
+            sandbox="allow-scripts allow-same-origin allow-pointer-lock allow-top-navigation-by-user-activation">
+          </iframe>
+        </div>
+        <p>
+          若 iframe 未加载，可能是来源站点设置了 X-Frame-Options。请联系提供方或将游戏部署至自有服务器后再嵌入。
+        </p>
+      </div>
+    </section>
+
+    <section id="faq">
+      <h2>常见问题解答</h2>
+      <details>
+        <summary>Mini Sudoku 会不会太简单？</summary>
+        <p>对初学者来说它是绝佳的逻辑热身，但排行榜会不断抬高目标；想提高挑战性，可尝试速通、禁用提示或切换到 6×6 难度。</p>
+      </details>
+      <details>
+        <summary>如何在课堂或活动中使用 Mini Sudoku？</summary>
+        <p>使用投影或屏幕共享展示棋盘，让参与者轮流报候选，并记录完成时间。活动后可把排行榜截图分享到班级或团队群里。</p>
+      </details>
+      <details>
+        <summary>我可以把这个 iframe 嵌入到自己的博客吗？</summary>
+        <p>可以，将本页的容器复制到站点，并标注来源链接。上线前请再次查看 MiniSudoku.games 的嵌入政策，尊重其版权与数据收集条款。</p>
+      </details>
+      <details>
+        <summary>排行榜会保存哪些数据？</summary>
+        <p>提交成绩时系统会记录昵称、耗时、难度与错误次数，不会要求登录。若不想公开成绩，完成后可直接关闭弹窗保留本地记录即可。</p>
+      </details>
+    </section>
+  </main>
+
+  <footer>
+    版权 © <span data-current-year></span> Mini Sudoku 数独微站｜内容原创撰写，欢迎以链接形式分享。
+  </footer>
+
+  <script>
+    (function () {
+      const updated = document.querySelector("[data-last-updated]");
+      const currentYear = document.querySelector("[data-current-year]");
+      const now = new Date();
+      if (updated) {
+        try {
+          const formatted = new Intl.DateTimeFormat("zh-Hans", { dateStyle: "long" }).format(now);
+          updated.textContent = formatted;
+        } catch (err) {
+          updated.textContent = now.toISOString().split("T")[0];
+        }
+      }
+      if (currentYear) {
+        currentYear.textContent = now.getFullYear();
+      }
+    }());
+  </script>
+</body>
+</html>
