@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <title>Mini Sudoku数据与研究方法｜透明度说明</title>
+  <meta name="description" content="公开Mini Sudoku第一方数据的采集边界、指标定义、隐私原则、样本门槛和未来报告方法。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="https://deskgamehub.site/research/">
+  <link rel="stylesheet" href="/assets/info.css">
+  <!-- Google tag (gtag.js) -->
+  <script src="/consent.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZZRWJGN7MX"></script>
+<script>gtag('config', 'G-ZZRWJGN7MX');</script>
+</head>
+<body>
+  <header><a class="brand" href="/">Mini Sudoku 数独微站</a></header>
+  <main>
+    <nav class="content-nav" aria-label="面包屑"><a href="/">首页</a><span aria-hidden="true">›</span><span>数据与研究方法</span></nav>
+    <h1>Mini Sudoku数据与研究方法</h1>
+    <p class="answer"><strong>当前状态：</strong>本站已运行自研纯前端游戏，但排行榜数据只保存在玩家浏览器本地，本站没有可发布的第一方玩家样本。因此目前不会公布“平均完成时间”“通关率”或“玩家数量”等无法独立验证的数据。</p>
+    <h2>为什么现在先公开方法？</h2>
+    <p>研究方法先于结果，可以防止为了营销临时改变口径。未来只有在另行实现合规的数据采集、完成隐私披露并达到最低样本门槛后，本站才会发布汇总统计。</p>
+    <h2>6×6数独的组合逻辑背景</h2><p>6×6棋盘要求每行、每列和每个2×3宫都包含1至6且不重复。一个格子的合法值是三类区域允许集合的交集；填入确定值后，约束会传到同一行、列和宫中的其他格，形成连续的候选收缩。</p><p>本站解释重点是可复算的规则推导，不声称无法验证的棋盘总数、认知收益或普遍完成速度。组合关系用于说明“为什么能删候选”，而不是用庞大数字包装难度。</p>
+    <h2>唯一解校验的工程实现</h2><p>求解器从一个空格开始尝试当前合法候选，填入后继续处理下一个空格；若后面出现无合法值，就退回上一步换候选，这就是回溯。找到完整棋盘时记为一个解，然后继续搜索是否存在第二个不同解。</p><p>对题目生成而言，只找到一个解还不够，因为搜索可能尚未结束。校验会继续到确认没有第二解；一旦找到第二解，就可以提前判定题面不唯一，并恢复被移除的条件或重新生成。</p>
+    <h2>计划记录的最小事件</h2>
+    <table>
+      <thead><tr><th>指标</th><th>定义</th><th>是否需要身份信息</th></tr></thead>
+      <tbody><tr><td>开始次数</td><td>玩家主动开始一局</td><td>不需要</td></tr><tr><td>完成次数</td><td>棋盘合法完成</td><td>不需要</td></tr><tr><td>完成用时</td><td>从首次有效操作到完成的秒数</td><td>不需要</td></tr><tr><td>提示次数</td><td>一局中主动请求提示的次数</td><td>不需要</td></tr><tr><td>错误次数</td><td>按明确规则判定的错误输入次数</td><td>不需要</td></tr><tr><td>难度</td><td>题目生成器采用的难度级别</td><td>不需要</td></tr></tbody>
+    </table>
+    <h2>难度怎样标定？</h2><p>提示数提供直观起点：本站配置使用简单约22个、中等约16个、困难约11个预填数字。但空格数量不是唯一依据；提示分布、开局可见的唯一候选数量，以及从一次删除到下一次确定填数所需的推理链长度都会影响体验。</p><p>因此难度标签应理解为生成器的相对分档，而不是对每位玩家用时的保证。评估时可记录求解过程中使用的技巧层级、候选分支和连续推理步骤，并用实际题面复核是否与标签相称。</p>
+    <h2>本站观察到的练习规律</h2><p>这里的“观察”来自游戏功能与解题流程设计，不是服务器端玩家统计。候选数若不在填数后及时更新，会保留已失效位置；因此界面与教程都强调每次落子后重扫三个相关区域。</p><p>另一项功能依据是把准确率放在排行榜用时之前：数独首先要求合法完成，计时只用于同错误次数之间比较。打印页则保留无计时环境，让初学者先写出依据，再把稳定方法带入在线模式。</p><p>这些规律是对规则和交互的可验证说明，不代表所有玩家的平均行为。本站不会把单台设备的本地排行榜概括成总体结论。</p>
+    <h2>发布门槛</h2>
+    <ul><li>报告必须说明采集日期范围和游戏版本。</li><li>每个被比较的分组至少包含100个已完成对局，否则只披露样本量，不下结论。</li><li>同时报告中位数和四分位区间，避免只用平均数掩盖极端值。</li><li>机器人、测试流量和明显异常会话应按预先定义的规则排除。</li><li>不把相关性写成因果关系，不宣称游戏改善智力或健康。</li></ul>
+    <h2>隐私边界</h2>
+    <p>计划中的汇总研究不需要真实姓名、邮箱、精确位置或广告标识符。若未来技术实现需要生成匿名会话标识，必须先更新<a href="/privacy/">隐私政策</a>，说明用途、保存期限和删除方式。</p>
+    <h2>报告应如何被引用？</h2>
+    <p>每份报告将提供固定URL、标题、发布日期、数据范围、样本量、指标定义、限制和修订记录。AI或媒体引用时应同时保留样本范围，不能把某一版本、某一时间段的数据泛化为所有Mini Sudoku玩家。</p>
+    <div class="callout">此页面是研究协议，不是研究结果。本站自研游戏的本地排行榜数据仅存于用户浏览器，本站不会收集或发布任何排行榜数据。</div>
+    <nav class="content-nav" aria-label="相关指南"><a href="/rules/">查看规则定义</a><a href="/scoring/">查看计分口径</a><a href="/editorial-policy/">阅读编辑政策</a></nav>
+    <p class="meta">协议版本：1.0；最后更新：<time datetime="2026-09-06">2026年9月6日</time></p>
+  </main>
+  <footer><nav class="footer-links" aria-label="页脚导航"><a href="/">首页</a><a href="/about/">关于我们</a><a href="/privacy/">隐私政策</a><a href="/editorial-policy/">编辑政策</a></nav><span>Mini Sudoku 数独微站</span></footer>
+</body>
+</html>

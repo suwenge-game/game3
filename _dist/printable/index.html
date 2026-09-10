@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <title>6×6 Mini Sudoku打印练习表｜可打印谜题</title>
+  <meta name="description" content="生成并打印6×6 Mini Sudoku练习表：简单、中等、困难各两题，附答案，适合课堂与家庭练习。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="https://deskgamehub.site/printable/">
+  <link rel="stylesheet" href="/assets/info.css">
+  <style>
+    .print-toolbar { display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; margin: 1.5rem 0; }
+    .print-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.7rem 1.4rem;
+      border-radius: 999px;
+      background: var(--brand, #0c7489);
+      color: #fff;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 1rem;
+    }
+    .print-btn:hover, .print-btn:focus { background: var(--brand-dark, #095466); }
+    .print-btn.secondary { background: transparent; color: var(--brand, #0c7489); border: 1px solid var(--brand, #0c7489); }
+
+    .puzzle-set { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 1.75rem; margin-top: 1.5rem; }
+    .puzzle-card {
+      border: 1px solid var(--border, #d8e6e8);
+      border-radius: 0.75rem;
+      padding: 1rem 1.25rem 1.25rem;
+      background: #fff;
+      break-inside: avoid;
+    }
+    .puzzle-card h3 { margin: 0 0 0.75rem; font-size: 1.05rem; color: var(--brand, #0c7489); }
+    .puzzle-card p { margin: 0 0 0.75rem; color: var(--muted, #5f6b7a); font-size: 0.9rem; }
+
+    .print-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 2.2rem);
+      grid-template-rows: repeat(6, 2.2rem);
+      gap: 1px;
+      background: var(--border, #d8e6e8);
+      border: 2px solid var(--brand, #0c7489);
+      border-radius: 4px;
+      overflow: hidden;
+      width: fit-content;
+      margin: 0 auto;
+    }
+    .print-cell {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text, #1b1f24);
+      width: 2.2rem;
+      height: 2.2rem;
+    }
+    .print-cell.empty { color: transparent; }
+    .print-cell:nth-child(6n + 3) { border-right: 1.5px solid var(--brand, #0c7489); }
+    .print-cell:nth-child(6n + 4) { border-left: 1.5px solid var(--brand, #0c7489); }
+    .print-cell:nth-child(n + 13):nth-child(-n + 18) { border-top: 1.5px solid var(--brand, #0c7489); }
+    .print-cell:nth-child(n + 19):nth-child(-n + 24) { border-bottom: 1.5px solid var(--brand, #0c7489); }
+
+    details { margin-top: 0.75rem; }
+    details .answer-grid { margin-top: 0.75rem; }
+    .answer-grid { display: none; }
+    details[open] .answer-grid { display: block; }
+
+    @media print {
+      body * { visibility: hidden; }
+      .print-area, .print-area * { visibility: visible; }
+      .print-area { position: absolute; inset: 0; }
+      .no-print { display: none !important; }
+      .puzzle-card { break-inside: avoid; page-break-inside: avoid; }
+      .puzzle-set { gap: 2.5rem; }
+      details { display: none; }
+    }
+    @media (max-width: 480px) {
+      .print-grid { grid-template-columns: repeat(6, 2rem); grid-template-rows: repeat(6, 2rem); }
+      .print-cell { width: 2rem; height: 2rem; font-size: 1rem; }
+    }
+  </style>
+  <!-- Google tag (gtag.js) -->
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',wait_for_update:500});</script><!-- Funding Choices (Privacy & Messaging) is enabled at account level; TCF banner served by Google when live. --><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9132117639313977" crossorigin="anonymous"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZZRWJGN7MX"></script>
+<script>gtag('config', 'G-ZZRWJGN7MX');</script>
+</head>
+<body>
+  <header><a class="brand" href="/">Mini Sudoku 数独微站</a></header>
+  <main>
+    <nav class="content-nav no-print" aria-label="面包屑"><a href="/">首页</a><span aria-hidden="true">›</span><span>打印练习表</span></nav>
+    <h1>6×6 Mini Sudoku 打印练习表</h1>
+    <p class="summary">生成六道可打印的 6×6 数独题：简单、中等、困难各两题，全部经过唯一解校验。适合课堂练习、家庭活动与线下训练。</p>
+
+    <div class="print-toolbar no-print">
+      <button type="button" class="print-btn" id="btn-print" onclick="window.print()">🖨 打印练习表</button>
+      <button type="button" class="print-btn secondary" id="btn-regenerate" onclick="location.reload()">换一批题目</button>
+    </div>
+
+    <div class="print-area">
+      <p class="meta" id="print-date"></p>
+      <div class="puzzle-set" id="puzzle-set"></div>
+    </div>
+
+    <h2 class="no-print">打印练习有什么用途？</h2><p class="no-print">离线练习能把注意力集中在候选标注与推理步骤上，不受计时界面影响。课堂中可以让学习者比较同一格的排除依据；家庭或亲子场景中，可轮流说明为什么某个数字不能出现，而不是只报答案。</p><p class="no-print">纸面也适合保留过程：在空白处写开始时间、结束时间、错误位置和使用过的技巧。复盘时看到被擦除的候选，往往比只看最终用时更容易发现扫描习惯的问题。</p>
+    <h2 class="no-print">六题怎样构成？</h2><p class="no-print">每次页面生成简单两题、中等两题、困难两题，共六题。简单题预填较多，适合练习规则与唯一候选；中等题增加候选比较；困难题空格更多，需要更完整地维护候选和排除链。</p><p class="no-print">生成器先构造合法终盘，再移除数字，并用求解器确认题面仍只有一个完整解。难度名称表示本站生成配置，不代表每位玩家都需要相同时间。</p>
+    <table class="no-print"><thead><tr><th>题号范围</th><th>数量</th><th>建议目标</th></tr></thead><tbody><tr><td>简单题</td><td>2题</td><td>不猜测地完成三重约束检查</td></tr><tr><td>中等题</td><td>2题</td><td>识别隐性唯一并及时更新候选</td></tr><tr><td>困难题</td><td>2题</td><td>练习数对及较长推理链</td></tr></tbody></table>
+    <h2 class="no-print">打印步骤与纸张建议</h2><ol class="no-print"><li>先点击“换一批题目”，直到准备好本次练习组；换题后此前题面不会保留。</li><li>选择“打印练习表”，在浏览器预览中确认缩放比例和方向。</li><li>使用普通A4纸即可，建议保持纵向并让浏览器按页面适配，避免棋盘跨页。</li><li>需要反复擦写时可先用铅笔；候选数写在格角，确定数写在格中。</li></ol>
+    <h2 class="no-print">答案页怎么用？</h2><p class="no-print">屏幕上每张题卡下方都有“查看答案”，用于完成后逐行、逐列、逐宫核对。打印模式默认隐藏答案详情，避免题面与答案混在同一练习页；如需纸面答案，可在练习后另行对照屏幕抄录。</p><p class="no-print">遇到不同数字时不要只改成答案，应回查第一个分歧格的候选依据。确认是漏看同行、同列还是同宫，才能把一次纠错转成可重复的解题方法。</p>
+    <h2 class="no-print">配合每日一题的节奏</h2><p class="no-print">工作日可完成<a href="/daily/">每日一题</a>，以中等难度保持扫描手感；周末打印六题，按简单到困难顺序集中练习。简单题用于热身，中等题比较每日练习中的薄弱点，困难题则允许慢速写全候选。</p><p class="no-print">建议记录每题用到的最高阶技巧，而不是只记秒数。若困难题频繁卡住，可回到<a href="/techniques/">唯一候选与隐性唯一</a>，确认基础扫描没有遗漏，再练习<a href="/naked-pairs/">数对删除</a>。</p>
+
+    <h2 class="no-print">练习建议</h2>
+    <ol class="no-print">
+      <li>简单题练习规则熟悉度与唯一候选法。</li>
+      <li>中等题练习隐性唯一候选与数对排除。</li>
+      <li>困难题尝试完整候选数标注流程。</li>
+      <li>答完后与<a href="/#mini-sudoku-game">在线游戏</a>的计时模式对比成绩。</li>
+    </ol>
+    <nav class="content-nav no-print" aria-label="相关指南"><a href="/rules/">查看6×6规则</a><a href="/strategies/">学习解题策略</a><a href="/techniques/">基础技巧</a><a href="/naked-pairs/">数对技巧</a><a href="/daily/">每日一题</a></nav>
+    <p class="meta no-print">题目由本站生成器产出并经过唯一解校验。页面最后更新：<time datetime="2026-09-06">2026年9月6日</time></p>
+  </main>
+  <footer><nav class="footer-links no-print" aria-label="页脚导航"><a href="/">首页</a><a href="/about/">关于我们</a><a href="/privacy/">隐私政策</a><a href="/editorial-policy/">编辑政策</a></nav><span>Mini Sudoku 数独微站</span></footer>
+
+  <script src="/assets/game.js"></script>
+  <script>
+    (function () {
+      var now = new Date();
+      var fmt = now.getFullYear() + "年" + (now.getMonth() + 1) + "月" + now.getDate() + "日";
+      var confs = [
+        { diff: "easy", label: "简单", n: 2 },
+        { diff: "medium", label: "中等", n: 2 },
+        { diff: "hard", label: "困难", n: 2 }
+      ];
+
+      var set = document.getElementById("puzzle-set");
+
+      function makeGrid(grid, cls) {
+        var el = document.createElement("div");
+        el.className = cls || "print-grid";
+        for (var r = 0; r < 6; r++) {
+          for (var c = 0; c < 6; c++) {
+            var v = grid[r][c];
+            var cell = document.createElement("span");
+            cell.className = "print-cell" + (v === 0 ? " empty" : "");
+            cell.textContent = v === 0 ? "·" : v;
+            el.appendChild(cell);
+          }
+        }
+        return el;
+      }
+
+      confs.forEach(function (cfg) {
+        for (var i = 1; i <= cfg.n; i++) {
+          var game = window.MS6.generate(cfg.diff);
+          var card = document.createElement("div");
+          card.className = "puzzle-card";
+
+          var h = document.createElement("h3");
+          h.textContent = cfg.label + "题 " + i;
+          card.appendChild(h);
+
+          var p = document.createElement("p");
+          p.textContent = "第 " + (i + 2) + " 题 · 填入 1–6，每行每列每宫不重复";
+          card.appendChild(p);
+
+          card.appendChild(makeGrid(game.puzzle));
+
+          var det = document.createElement("details");
+          var sum = document.createElement("summary");
+          sum.textContent = "查看答案";
+          det.appendChild(sum);
+          var ansWrap = document.createElement("div");
+          ansWrap.className = "answer-grid";
+          ansWrap.appendChild(makeGrid(game.solution));
+          det.appendChild(ansWrap);
+          card.appendChild(det);
+
+          set.appendChild(card);
+        }
+      });
+
+      document.getElementById("print-date").textContent = "生成于 " + fmt + " · 共六题";
+      document.getElementById("print-updated").textContent = fmt;
+    }());
+  </script>
+</body>
+</html>

@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <title>6×6 Mini Sudoku 在线游戏｜规则、计分与中文攻略</title>
+  <meta name="description" content="在线玩本站自研的 6×6 Mini Sudoku 游戏，了解2×3宫格规则、候选数技巧与本地排行榜计分方式。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="https://deskgamehub.site/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="6×6 Mini Sudoku 在线游戏｜规则、计分与中文攻略">
+  <meta property="og:description" content="在线玩本站自研 6×6 Mini Sudoku 游戏，了解规则、候选数技巧和排行榜计分方式。">
+  <meta property="og:url" content="https://deskgamehub.site/">
+  <meta property="og:locale" content="zh_CN">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="6×6 Mini Sudoku 在线游戏与中文攻略">
+  <meta name="twitter:description" content="了解2×3宫格规则、解题技巧和排行榜计分方式。">
+  <meta name="theme-color" content="#0c7489">
+  <link rel="stylesheet" href="/assets/game.css">
+  <style>
+    :root {
+      color-scheme: light;
+      --brand: #0c7489;
+      --brand-dark: #095466;
+      --accent: #f2c14e;
+      --bg: #f9fafb;
+      --text: #1b1f24;
+      --muted: #5f6b7a;
+      --surface: rgba(255, 255, 255, 0.88);
+      --radius: 14px;
+      font-size: 16px;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      color: var(--text);
+      background: linear-gradient(165deg, #e8f1f8 0%, #fefcf6 45%, #ffffff 100%);
+    }
+    a {
+      color: var(--brand);
+      text-decoration-thickness: 0.1em;
+      text-underline-offset: 0.2em;
+    }
+    a:hover,
+    a:focus {
+      color: var(--brand-dark);
+    }
+    a:focus-visible,
+    button:focus-visible,
+    summary:focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: 3px;
+    }
+    .skip-link {
+      position: fixed;
+      top: 0.75rem;
+      left: 0.75rem;
+      z-index: 20;
+      padding: 0.65rem 1rem;
+      color: #fff;
+      background: var(--brand-dark);
+      border-radius: 0.5rem;
+      transform: translateY(-200%);
+    }
+    .skip-link:focus {
+      color: #fff;
+      transform: translateY(0);
+    }
+    header {
+      background: radial-gradient(circle at 20% 20%, rgba(12, 116, 137, 0.18), rgba(12, 116, 137, 0));
+      padding: 3.5rem 1.25rem 2.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    header::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 80% 10%, rgba(242, 193, 78, 0.22), rgba(242, 193, 78, 0));
+      z-index: 0;
+    }
+    .hero {
+      max-width: 960px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+      text-align: center;
+    }
+    .hero h1 {
+      font-size: clamp(2.4rem, 4vw, 3.4rem);
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.04em;
+    }
+    .hero p {
+      font-size: clamp(1.05rem, 2.2vw, 1.25rem);
+      color: var(--muted);
+      max-width: 660px;
+      margin: 0.75rem auto 1.5rem;
+    }
+    .meta {
+      display: inline-flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.25rem;
+      padding: 0.6rem 1.2rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.75);
+      color: var(--muted);
+      font-size: 0.9rem;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 18px 40px -25px rgba(12, 116, 137, 0.8);
+    }
+    nav {
+      background: rgba(255, 255, 255, 0.92);
+      padding: 0.75rem 1.25rem;
+      border-bottom: 1px solid rgba(12, 116, 137, 0.08);
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      backdrop-filter: blur(10px);
+    }
+    nav ul {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0;
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem 1.4rem;
+      justify-content: center;
+    }
+    nav a {
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+    main {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 2.5rem 1.25rem 3rem;
+    }
+    section {
+      margin-bottom: 3.2rem;
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 2rem 2.2rem;
+      box-shadow: 0 22px 45px -40px rgba(12, 116, 137, 0.75);
+      scroll-margin-top: 6rem;
+      content-visibility: auto;
+      contain-intrinsic-size: auto 36rem;
+    }
+    section h2 {
+      font-size: 1.8rem;
+      margin-top: 0;
+      margin-bottom: 1rem;
+    }
+    section p {
+      margin: 1rem 0;
+    }
+    .feature-list,
+    .strategy-list {
+      display: grid;
+      gap: 1.5rem;
+      margin: 1.5rem 0;
+    }
+    .feature-card,
+    .strategy-card {
+      background: rgba(12, 116, 137, 0.06);
+      border-radius: calc(var(--radius) - 4px);
+      padding: 1rem 1.25rem;
+      border: 1px solid rgba(12, 116, 137, 0.12);
+    }
+    .feature-card h3,
+    .strategy-card h3 {
+      margin-top: 0;
+      margin-bottom: 0.6rem;
+      font-size: 1.2rem;
+    }
+    .steps {
+      counter-reset: step;
+      display: grid;
+      gap: 1.25rem;
+    }
+    .steps li {
+      list-style: none;
+      background: rgba(242, 193, 78, 0.14);
+      border: 1px solid rgba(242, 193, 78, 0.3);
+      border-radius: calc(var(--radius) - 6px);
+      padding: 1rem 1.2rem 1.2rem 3.4rem;
+      position: relative;
+      min-height: 3.4rem;
+    }
+    .steps li::before {
+      counter-increment: step;
+      content: counter(step);
+      font-weight: 700;
+      font-size: 1.2rem;
+      position: absolute;
+      inset: 1rem auto auto 1rem;
+      width: 2rem;
+      height: 2rem;
+      border-radius: 999px;
+      background: var(--accent);
+      color: #1b1f24;
+      display: grid;
+      place-items: center;
+    }
+    .game-shell {
+      background: #061f2f;
+      border-radius: calc(var(--radius) - 4px);
+      padding: clamp(0.8rem, 2vw, 1.5rem);
+      color: #f4f8fb;
+      border: 1px solid rgba(12, 116, 137, 0.45);
+    }
+    details {
+      background: rgba(12, 116, 137, 0.05);
+      border: 1px solid rgba(12, 116, 137, 0.12);
+      border-radius: calc(var(--radius) - 6px);
+      padding: 1.1rem 1.3rem;
+      margin-bottom: 1rem;
+    }
+    details summary {
+      font-weight: 600;
+      cursor: pointer;
+    }
+    footer {
+      text-align: center;
+      padding: 2.5rem 1rem 3.5rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.6rem 1rem;
+      margin-bottom: 0.75rem;
+    }
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.8rem 1.6rem;
+      border-radius: 999px;
+      background: var(--brand);
+      color: #fff;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: transform 180ms ease, box-shadow 180ms ease;
+      text-decoration: none;
+    }
+    .cta:hover,
+    .cta:focus {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 32px -24px rgba(12, 116, 137, 0.9);
+    }
+    @media (max-width: 768px) {
+      header {
+        padding-top: 2.5rem;
+      }
+      .meta {
+        gap: 0.35rem 0.8rem;
+        border-radius: 1rem;
+      }
+      nav {
+        position: static;
+      }
+      section {
+        padding: 1.75rem 1.6rem;
+        scroll-margin-top: 1rem;
+      }
+      .feature-list,
+      .strategy-list {
+        grid-template-columns: 1fr;
+      }
+    }
+    @media (min-width: 769px) {
+      .feature-list,
+      .strategy-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+  </style>
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://deskgamehub.site/#website","url":"https://deskgamehub.site/","name":"Mini Sudoku 数独微站","inLanguage":"zh-Hans","description":"提供 6×6 Mini Sudoku 自研在线游戏、中文攻略、练习计划与常见问题解答的专题网站。","publisher":{"@type":"Organization","name":"Mini Sudoku 数独微站","logo":{"@type":"ImageObject","url":"https://deskgamehub.site/logo-512.png"}}},{"@type":"WebPage","@id":"https://deskgamehub.site/#webpage","url":"https://deskgamehub.site/","name":"Mini Sudoku 数独微站","isPartOf":{"@id":"https://deskgamehub.site/#website"},"about":{"@type":"Game","@id":"https://deskgamehub.site/#game","name":"Mini Sudoku"},"datePublished":"2025-10-22","dateModified":"2026-09-03","description":"在同一页面体验自研 6×6 Mini Sudoku 游戏，阅读中文规则、解题步骤、计分说明与常见问题。","inLanguage":"zh-Hans"},{"@type":"Game","@id":"https://deskgamehub.site/#game","name":"6×6 Mini Sudoku","applicationCategory":"Game","operatingSystem":"Web Browser","genre":["Puzzle","Logic"],"playMode":"SinglePlayer","isAccessibleForFree":true,"description":"本站自研的6×6数独游戏，使用数字1至6和2×3宫格，提供简单、中等、困难三档难度，候选数标记、计时与本地排行榜。"},{"@type":"FAQPage","@id":"https://deskgamehub.site/#faq","mainEntity":[{"@type":"Question","name":"这个 Mini Sudoku 是4×4还是6×6？","acceptedAnswer":{"@type":"Answer","text":"本站自研游戏使用6×6棋盘、数字1至6和2×3宫格，不是4×4版本。"}},{"@type":"Question","name":"玩游戏需要注册账号吗？","acceptedAnswer":{"@type":"Answer","text":"本站游戏无需注册账号；完成后的成绩保存在浏览器本地排行榜中，不会上传到服务器。"}},{"@type":"Question","name":"排行榜如何计分？","acceptedAnswer":{"@type":"Answer","text":"本地排行榜先按错误次数排序、再按用时排序，每档难度保存最快的10条成绩。"}}]}]}</script>
+  <!-- Google tag (gtag.js) -->
+  <script src="/consent.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZZRWJGN7MX"></script>
+<script>gtag('config', 'G-ZZRWJGN7MX');</script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">跳到主要内容</a>
+
+  <header>
+    <div class="hero">
+      <div class="meta" aria-label="页面更新信息">
+        <span>适配移动端</span>
+        <span>6×6排行榜版</span>
+        <span>更新于 <time datetime="2026-09-03">2026年9月3日</time></span>
+      </div>
+      <h1>6×6 Mini Sudoku 数独微站</h1>
+      <p>
+        本站自研的 6×6 Mini Sudoku 在线游戏：1至6数字、2×3宫格、三档难度、候选数铅笔标记、
+        计时与本地排行榜。你可以先读规则，再进入游戏练习。
+      </p>
+      <a class="cta" href="#mini-sudoku-game" aria-label="立即开始 6×6 Mini Sudoku 游戏">
+        开始挑战 ➜
+      </a>
+    </div>
+  </header>
+
+  <nav aria-label="页面主要导航">
+    <ul>
+      <li><a href="#what-is-mini-sudoku">玩法亮点</a></li>
+      <li><a href="#guides">深度指南</a></li>
+      <li><a href="#get-started">快速上手</a></li>
+      <li><a href="#strategy-lab">策略实验室</a></li>
+      <li><a href="#daily-challenge">训练计划</a></li>
+      <li><a href="#mini-sudoku-game">在线游戏</a></li>
+      <li><a href="#faq">常见问题</a></li>
+    </ul>
+  </nav>
+
+  <main id="main-content">
+    <section id="what-is-mini-sudoku">
+      <h2>Mini Sudoku 是什么？</h2>
+      <p>
+        Mini Sudoku 是经典9×9数独的紧凑变体。本站自研版本使用6×6棋盘：
+        每一行、每一列和每个2×3宫格都要完整包含数字1至6，且不能重复。
+      </p>
+      <p>
+        它保留了经典数独的排除与推理逻辑，但棋盘更小，适合短时完成。
+        游戏提供简单、中等、困难三档难度，以及候选数标记、计时与本地排行榜。
+      </p>
+
+      <div class="feature-list" role="list">
+        <article class="feature-card" role="listitem">
+          <h3>本地排行榜</h3>
+          <p>完成游戏后可以填写昵称保存成绩；排行榜按错误数和用时排序，成绩只保存在你的浏览器中。</p>
+        </article>
+        <article class="feature-card" role="listitem">
+          <h3>中文化内容导航</h3>
+          <p>本页提供原创中文攻略、术语释义与案例拆解，让初学者也能快速读懂“唯一候选”“宫内锁定”等技巧。</p>
+        </article>
+        <article class="feature-card" role="listitem">
+          <h3>多端即开即玩</h3>
+          <p>游戏是纯前端实现，手机、平板和桌面浏览器均可直接游玩，无需安装与注册。</p>
+        </article>
+        <article class="feature-card" role="listitem">
+          <h3>进阶衔接友好</h3>
+          <p>6×6需要处理比4×4更多的候选数，同时又比9×9紧凑，适合练习唯一候选、数对和宫线排除。</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="get-started">
+      <h2>10 分钟掌握 Mini Sudoku</h2>
+      <p>
+        想稳定通关并刷新本地排行榜，同时保持稳健的逻辑节奏，可以按下列流程拆分训练。
+        下面流程按照6×6数独的标准规则整理，覆盖识盘、推演和赛后复盘。
+      </p>
+      <ol class="steps">
+        <li>
+          认识棋盘与预填：先确认6×6布局与2×3宫格边界，检查各行、列和宫已出现的数字1至6。
+        </li>
+        <li>
+          填写必然数字：当某行、列或宫只缺一个值时立即填入，建立首轮“锚点”，减少后续猜测。
+        </li>
+        <li>
+          建立候选库：用铅笔标记或心算方式，列出剩余格子的可能值，并通过同行、同列、同宫逐一排除。
+        </li>
+        <li>
+          利用锁定技巧：当某数字仅在同一宫的同一行出现候选时，可锁定其余格子，快速打开新的推演链条。
+        </li>
+        <li>
+          回顾成绩：通关后记录耗时、错误点与“卡壳节点”，对照本地排行榜上自己此前的成绩，决定下一局要改进的侧重点。
+        </li>
+      </ol>
+    </section>
+
+    <section id="guides">
+      <h2>Mini Sudoku 深度指南</h2>
+      <p>下面四个专题分别回答规则、计分、解法和数据可信度问题。每页聚焦一个搜索意图，并提供可核对的定义、步骤或方法。</p>
+      <div class="feature-list" role="list">
+        <article class="feature-card" role="listitem">
+          <h3><a href="/rules/">6×6规则完整说明</a></h3>
+          <p>解释行、列、2×3宫格、候选数与合法解，适合第一次接触6×6数独的玩家。</p>
+        </article>
+        <article class="feature-card" role="listitem">
+          <h3><a href="/scoring/">排行榜计分公式</a></h3>
+          <p>拆解基础分、时间、提示、准确率奖励和难度倍率，并给出一组完整计算示例。</p>
+        </article>
+        <article class="feature-card" role="listitem">
+          <h3><a href="/strategies/">五种实用解题策略</a></h3>
+          <p>从唯一候选到宫线排除，说明何时使用、如何验证以及常见误区。</p>
+        </article>
+        <article class="feature-card" role="listitem"><h3><a href="/techniques/">唯一候选与隐性唯一</a></h3><p>用完整候选表解释两种基础技巧的区别、扫描方式与常见误用。</p></article>
+        <article class="feature-card" role="listitem"><h3><a href="/naked-pairs/">裸数对与指向数对</a></h3><p>从锁定条件到候选删除，逐步展示数对技巧怎样制造新的确定值。</p></article>
+        <article class="feature-card" role="listitem"><h3><a href="/faq/">常见问题 FAQ</a></h3><p>集中解答规则、候选数、每日一题、唯一解、本地存储与收费问题。</p></article>
+        <article class="feature-card" role="listitem">
+          <h3><a href="/daily/">每日一题</a></h3>
+          <p>每天一道中等难度谜题，基于日期生成、保证唯一解，可在线练或打印。</p>
+        </article>
+        <article class="feature-card" role="listitem">
+          <h3><a href="/printable/">打印练习表</a></h3>
+          <p>一键生成六道可打印的6×6数独题，附答案，适合课堂与线下练习。</p>
+        </article>
+        <article class="feature-card" role="listitem">
+          <h3><a href="/research/">数据与研究方法</a></h3>
+          <p>公开未来第一方游戏数据的指标、隐私边界和发布门槛，不发布无法验证的统计数字。</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="strategy-lab">
+      <h2>策略实验室</h2>
+      <p>
+        当你能稳定通关基础局面后，可以用下列策略把练习升级为“排行榜冲刺模式”，从观察力、抗压与速度多维度打磨。
+      </p>
+      <div class="strategy-list" role="list">
+        <article class="strategy-card" role="listitem">
+          <h3>节奏切片练习</h3>
+          <p>
+            按行、列和六个2×3宫格依次扫描，不要只盯住一个区域。连续完成三局后分别记录用时、提示和错误，
+            找出最常卡住的候选排除步骤。
+          </p>
+        </article>
+        <article class="strategy-card" role="listitem">
+          <h3>候选集交叉法</h3>
+          <p>
+            遇到两个候选值完全相同的格子时，检视它们是否位于同一行或列；这常常直接揭示唯一解，
+            在6×6棋盘中，结合2×3宫格继续排除，可以更快确认位置。
+          </p>
+        </article>
+        <article class="strategy-card" role="listitem">
+          <h3>错误缓冲记录</h3>
+          <p>
+            当排行榜提示“mistakes”时，回放最后三步的候选推理，找出错误产生的分支，并写下避免方式。
+            累积 5 次记录后，你会形成自己的纠错清单。
+          </p>
+        </article>
+        <article class="strategy-card" role="listitem">
+          <h3>进阶到9×9</h3>
+          <p>
+            当6×6能够稳定完成后，再尝试经典9×9；先保持候选标记准确，再逐步增加解题速度。
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section id="leaderboard-mode">
+      <h2>排行榜模式怎么玩？</h2>
+      <p>
+        本站游戏的排行榜保存在浏览器本地，按难度分别记录。每档难度只保留最快的10条成绩，
+        先比较错误次数，错误相同再比较用时。
+      </p>
+      <div class="feature-list" role="list">
+        <article class="feature-card" role="listitem">
+          <h3>错误优先排序</h3>
+          <p>
+            先比错误次数：0错误优于1次错误。每档难度有错误上限，超过即结束本局，
+            所以稳健解题比盲目抢速度更重要。
+          </p>
+        </article>
+        <article class="feature-card" role="listitem">
+          <h3>用时是第二指标</h3>
+          <p>
+            错误次数相同时，用时更短的成绩排名更靠前。计时从你第一次填数开始，通关后可在弹窗中查看总用时。
+          </p>
+        </article>
+        <article class="feature-card" role="listitem">
+          <h3>难度独立排名</h3>
+          <p>
+            简单、中等、困难三档难度各自独立排行，避免不同难度互相比较。成绩仅存于本机浏览器，不会上传服务器。
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section id="daily-challenge">
+      <h2>七日训练计划</h2>
+      <p>
+        可以用每天约15分钟建立稳定的解题习惯。训练计划的作用是帮助记录方法和错误，不承诺认知或健康方面的改善。
+      </p>
+      <p>
+        第1–2天聚焦唯一候选，第3–4天练习行列与宫格排除，第5天尝试少用提示，第6天比较不同难度，
+        第7天记录用时、提示和错误。将自己的本周数据与上周比较，比单纯追逐排行榜名次更有参考价值。
+      </p>
+    </section>
+
+    <section id="mini-sudoku-game">
+      <h2>在线体验 Mini Sudoku</h2>
+      <p>
+        这是本站自研的 6×6 Mini Sudoku 在线游戏：三档难度、候选数铅笔标记、计时与本地排行榜。
+        选择难度后点击「新局」开始；键盘支持 1–6 填数、方向键移动、Delete 清除、P 切换候选模式。
+      </p>
+      <div class="game-shell">
+        <div class="ms6-host" data-ms6-game role="region" aria-label="6×6 Mini Sudoku 在线游戏"></div>
+      </div>
+    </section>
+
+    <section id="faq">
+      <h2>常见问题解答</h2>
+      <details>
+        <summary>这个 Mini Sudoku 是4×4还是6×6？</summary>
+        <p>本站自研游戏使用6×6棋盘、数字1至6和2×3宫格，不是4×4版本。</p>
+      </details>
+      <details>
+        <summary>玩游戏需要注册账号吗？</summary>
+        <p>本站游戏无需注册账号；完成后的成绩保存在浏览器本地排行榜中，不会上传到服务器。</p>
+      </details>
+      <details>
+        <summary>排行榜如何计分？</summary>
+        <p>本地排行榜先按错误次数排序、再按用时排序，每档难度只保留最快的10条成绩。</p>
+      </details>
+      <details>
+        <summary>游戏会保存哪些数据？</summary>
+        <p>排行榜成绩和昵称保存在浏览器本地存储中，不会发送到任何服务器。清除浏览器数据后成绩会消失。</p>
+      </details>
+      <p class="meta">本站游戏为自研纯前端实现，生成的谜题均经过唯一解校验。</p>
+    </section>
+  <!-- dense-content v1 -->
+<h2>本局的训练价值</h2><p>每道归档题都经过三个维度的校验：唯一解（解数器确认全盘仅一条路径）、技巧覆盖（求解器记录用到的技巧序列，确保至少覆盖扫掠与隐性唯一两层）、以及难度分级（按求解器记录的最重技巧分级，而不是按挖空数量）。这份校验记录是归档题与随机题的区别——随机题只保证"能解"，归档题保证"值得解"。</p><p>纸面复盘的推荐流程：第一遍限时解，记录卡点；第二遍不限时，专攻卡点对应的技巧；第三遍对照答案链验证。三遍的收益各不相同——第一遍测速度，第二遍补短板，第三遍建立正确的推理顺序感。多数玩家只做第一遍就翻答案，那等于花钱买了门票没进场。</p><p>卡点定位的小技巧：如果卡住时盘面上"所有格子的候选都超过两个"，缺的通常是数字视角的扫描（隐性唯一）；如果"有几格候选只有两个但排不出"，缺的是结构视角（数对或指向对）。把卡点先分类成这两类之一，再翻答案，复盘质量立刻不同。</p>
+</main>
+
+  <footer>
+    <nav class="footer-links" aria-label="页脚导航">
+      <a href="/about/">关于我们</a>
+      <a href="/contact/">联系我们</a>
+      <a href="/privacy/">隐私政策</a>
+      <a href="/terms/">使用条款</a>
+      <a href="/editorial-policy/">编辑政策</a>
+    </nav>
+    <span>版权 © <span data-current-year></span> Mini Sudoku 数独微站｜内容原创撰写，欢迎以链接形式分享。</span>
+  </footer>
+
+  <script>
+    (function () {
+      const currentYear = document.querySelector("[data-current-year]");
+      const now = new Date();
+      if (currentYear) {
+        currentYear.textContent = now.getFullYear();
+      }
+    }());
+  </script>
+  <script src="/assets/game.js"></script>
+</body>
+</html>

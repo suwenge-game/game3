@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <title>每日一题｜6×6 Mini Sudoku 每日谜题</title>
+  <meta name="description" content="每天一道新的6×6 Mini Sudoku谜题，难度适中、保证唯一解。可在线解或打印，次日自动更新。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="https://deskgamehub.site/daily/">
+  <link rel="stylesheet" href="/assets/info.css">
+  <style>
+    .daily-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 2.6rem);
+      grid-template-rows: repeat(6, 2.6rem);
+      gap: 1px;
+      background: var(--border, #d8e6e8);
+      border: 3px solid var(--brand, #0c7489);
+      border-radius: 6px;
+      overflow: hidden;
+      width: fit-content;
+      margin: 1.5rem auto;
+    }
+    .daily-cell {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--text, #1b1f24);
+      width: 2.6rem;
+      height: 2.6rem;
+    }
+    .daily-cell.empty {
+      color: transparent;
+    }
+    /* 宫格分隔线 */
+    .daily-cell:nth-child(6n + 3) { border-right: 2px solid var(--brand, #0c7489); }
+    .daily-cell:nth-child(6n + 4) { border-left: 2px solid var(--brand, #0c7489); }
+    .daily-cell:nth-child(n + 13):nth-child(-n + 18) { border-top: 2px solid var(--brand, #0c7489); }
+    .daily-cell:nth-child(n + 19):nth-child(-n + 24) { border-bottom: 2px solid var(--brand, #0c7489); }
+    .daily-actions { text-align: center; margin: 1rem 0 1.5rem; }
+    .daily-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.7rem 1.5rem;
+      border-radius: 999px;
+      background: var(--brand, #0c7489);
+      color: #fff;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 1rem;
+      text-decoration: none;
+    }
+    .daily-btn:hover, .daily-btn:focus { background: var(--brand-dark, #095466); }
+    .daily-btn.secondary {
+      background: transparent;
+      color: var(--brand, #0c7489);
+      border: 1px solid var(--brand, #0c7489);
+    }
+    details.solution {
+      max-width: 30rem;
+      margin: 1.25rem auto;
+    }
+    @media (max-width: 480px) {
+      .daily-grid { grid-template-columns: repeat(6, 2.2rem); grid-template-rows: repeat(6, 2.2rem); }
+      .daily-cell { width: 2.2rem; height: 2.2rem; font-size: 1.1rem; }
+    }
+    @media print {
+      body * { visibility: hidden; }
+      .print-area, .print-area * { visibility: visible; }
+      .print-area { position: absolute; inset: 0; text-align: center; }
+      .no-print { display: none !important; }
+    }
+  </style>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"每日一题几点更新？","acceptedAnswer":{"@type":"Answer","text":"题目按访问设备的本地日期生成，跨过本地零点后刷新页面即可更换。"}},{"@type":"Question","name":"每日一题的难度会变吗？","acceptedAnswer":{"@type":"Answer","text":"不会跨难度随机变化；每日一题固定使用中等难度配置，但不同日期的具体推理路径会不同。"}},{"@type":"Question","name":"错过一天怎么办？","acceptedAnswer":{"@type":"Answer","text":"每日页不提供日期回放，可使用打印练习表生成相同难度的替代练习，并保留纸面复盘。"}}]}</script>
+  <!-- Google tag (gtag.js) -->
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',wait_for_update:500});</script><!-- Funding Choices (Privacy & Messaging) is enabled at account level; TCF banner served by Google when live. --><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9132117639313977" crossorigin="anonymous"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZZRWJGN7MX"></script>
+<script>gtag('config', 'G-ZZRWJGN7MX');</script>
+</head>
+<body>
+  <header><a class="brand" href="/">Mini Sudoku 数独微站</a></header>
+  <main>
+    <nav class="content-nav" aria-label="面包屑"><a href="/">首页</a><span aria-hidden="true">›</span><span>每日一题</span></nav>
+    <h1>每日一题：6×6 Mini Sudoku</h1>
+    <p class="summary">每天一道新的中等难度谜题，由本站生成器基于日期播种，保证唯一解。次日自动更换。</p>
+
+    <div class="print-area">
+      <p id="daily-date" class="meta"></p>
+      <div id="daily-board" class="daily-grid" role="img" aria-label="今日 6×6 数独谜题"></div>
+    </div>
+
+    <div class="daily-actions no-print">
+      <button type="button" class="daily-btn" id="btn-solve" onclick="location.href='/#mini-sudoku-game'">去在线游戏练习 ➜</button>
+      <button type="button" class="daily-btn secondary" onclick="window.print()">🖨 打印本题</button>
+    </div>
+
+    <details class="solution no-print">
+      <summary>查看今日答案</summary>
+      <div id="daily-solution" style="margin-top:0.75rem"></div>
+    </details>
+
+    <h2>每日一题怎么用？</h2>
+    <ol>
+      <li>先用排除法填确定值，标记候选数。</li>
+      <li>卡住时复习<a href="/strategies/">五种解题策略</a>。</li>
+      <li>通关后可回到<a href="/">首页</a>挑战计时排行榜模式。</li>
+    </ol>
+    <h2>今日谜题提示</h2><p>先扫描预填数字较集中的2×3宫，再查看与它交叉的行和列。优先找只缺一两个数字的区域，把缺数列表与列中已有数字对照；这类检查只给出方向，不揭示具体答案。</p><p>若第一轮没有确定值，按数字1至6逐个查看每个宫中的合法位置，寻找隐性唯一。每填入一格就重新扫描相关行、列和宫，不要在候选仍有两个时试填。</p>
+    <h2>每日一题的生成机制</h2><p>页面把设备当前日期转换为日期种子，并交给本站生成器，因此同一设备日期刷新时会得到同一题，日期变化后才换题。每日页固定调用中等难度配置，避免今天过易、明天突然跨到困难档。</p><p>生成过程先得到完整合法棋盘，再移除部分数字。每次形成题面时，求解器都会检查完整解的数量，只有恰好一个解的题目才可使用。玩家可以逐行、逐列、逐宫核对完成盘；答案区也提供可验证的最终棋盘。</p>
+    <h2>如何高效练习每日一题</h2><h3>计时挑战</h3><p>第一次以零错误完成为目标，记录从开始观察到完成的总时间。重复练习时比较自己在哪个扫描阶段停顿，不要为了缩短时间跳过候选验证。</p><h3>候选数模式</h3><p>卡住时把每个未定格的候选写全，并在填数后立即更新相邻区域。尝试分辨“格内只剩一个”的唯一候选和“区域内数字只剩一处”的隐性唯一。</p><h3>复盘流程</h3><ol><li>完成后找出第一个花费较久的区域。</li><li>写下当时遗漏的是行、列还是宫约束。</li><li>用<a href="/strategies/">策略页</a>核对是否存在更短的排除链。</li><li>第二天开始前先回想这条规则，再解新题。</li></ol>
+    <h2>昨日回顾</h2><p>每日页按当天日期展示题目，不提供昨日题目的在线回放。若错过一天或希望保留练习记录，可使用<a href="/printable/">打印练习表</a>生成两道中等题作为替代，把日期、用时和关键推理写在纸面上。</p><p>纸面练习不是每日题的原样存档，但能保持相同规则与难度方向。建议每日完成一题，周末集中打印六题，复练候选标注和数对排除。</p>
+    <h2>完成后怎样验证？</h2><p>不要只看页面是否填满。逐行、逐列、逐宫确认数字1至6各出现一次，再展开今日答案对照第一个不同格。若有差异，回查该格当时的候选来源，分辨是漏看行、列还是宫，而不是直接抄写答案。</p>
+    <p>建议只在完成后查看答案。提前展开时可以把它当成纠错工具：只核对当前冲突所在区域，关闭答案后再独立完成剩余推理，避免把整盘变成抄写练习。</p>
+    <h2>常见问题</h2><h3>几点更新？</h3><p>以设备本地日期为准，跨过本地零点后刷新页面即可更换。</p><h3>难度会变吗？</h3><p>每日一题固定为中等难度配置；具体题面和推理顺序随日期种子变化。</p><h3>错过一天怎么办？</h3><p>使用打印练习表生成中等题替代，或继续当天新题；无需补签才能使用。</p>
+    <nav class="content-nav no-print" aria-label="相关指南"><a href="/practice-plan/">加入21天练习计划</a><a href="/variants/">对比数独变体</a><a href="/rules/">查看6×6规则</a><a href="/strategies/">学习解题策略</a><a href="/faq/">常见问题</a><a href="/printable/">打印练习</a><a href="/scoring/">查看排行榜计分</a></nav>
+    <p class="meta">本站每日谜题由生成器自动产出并经过唯一解校验。最后更新：<time datetime="2026-09-06">2026年9月6日</time></p>
+  </main>
+  <footer><nav class="footer-links no-print" aria-label="页脚导航"><a href="/">首页</a><a href="/about/">关于我们</a><a href="/privacy/">隐私政策</a><a href="/editorial-policy/">编辑政策</a></nav><span>Mini Sudoku 数独微站</span></footer>
+
+  <script src="/assets/game.js"></script>
+  <script>
+    (function () {
+      // 基于日期的确定性 seed：YYYYMMDD
+      var now = new Date();
+      var seed = now.getFullYear() * 10000 + (now.getMonth() + 1) * 100 + now.getDate();
+      var fmt = now.getFullYear() + "年" + (now.getMonth() + 1) + "月" + now.getDate() + "日";
+
+      var game = window.MS6.generateSeeded("medium", seed);
+      var board = document.getElementById("daily-board");
+      var solBox = document.getElementById("daily-solution");
+
+      function renderGrid(grid, target) {
+        var frag = document.createDocumentFragment();
+        for (var r = 0; r < 6; r++) {
+          for (var c = 0; c < 6; c++) {
+            var v = grid[r][c];
+            var cell = document.createElement("span");
+            cell.className = "daily-cell" + (v === 0 ? " empty" : "");
+            cell.textContent = v === 0 ? "·" : v;
+            frag.appendChild(cell);
+          }
+        }
+        target.appendChild(frag);
+      }
+
+      renderGrid(game.puzzle, board);
+
+      // 答案网格（相同样式，紧凑复制）
+      var solGrid = document.createElement("div");
+      solGrid.className = "daily-grid";
+      solGrid.style.margin = "0 auto";
+      renderGrid(game.solution, solGrid);
+      solBox.appendChild(solGrid);
+
+      document.getElementById("daily-date").textContent = "今日题目（" + fmt + "）· 中等难度";
+    }());
+  </script>
+</body>
+</html>

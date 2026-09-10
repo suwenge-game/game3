@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <title>6×6 Mini Sudoku排行榜计分｜本地排行榜规则</title>
+  <meta name="description" content="本站自研6×6 Mini Sudoku的排行榜排序规则：先比错误次数、再比用时，每档难度保留前10名。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="https://deskgamehub.site/scoring/">
+  <link rel="stylesheet" href="/assets/info.css">
+  <!-- Google tag (gtag.js) -->
+  <script src="/consent.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZZRWJGN7MX"></script>
+<script>gtag('config', 'G-ZZRWJGN7MX');</script>
+</head>
+<body>
+  <header><a class="brand" href="/">Mini Sudoku 数独微站</a></header>
+  <main>
+    <nav class="content-nav" aria-label="面包屑"><a href="/">首页</a><span aria-hidden="true">›</span><span>排行榜计分</span></nav>
+    <h1>6×6 Mini Sudoku排行榜如何计分？</h1>
+    <p class="answer"><strong>直接答案：</strong>本站自研游戏的排行榜按难度分别记录，先比较错误次数，错误相同再比较用时；每档难度只保留最快的10条成绩。</p>
+    <h2>排序规则</h2>
+    <p>排行榜不使用积分公式，而是两阶段排序：第一步比较错误次数，错误更少的成绩排在前面；第二步比较用时，用时更短的成绩排在前面。两条成绩都满足“完成谜题”这一前提。</p>
+    <p>准确率放在第一位，是因为数独的核心是每一步符合逻辑约束。若单纯按速度排序，频繁试填可能压过稳健推理；先比较错误可鼓励玩家验证候选，再在同等准确度下提升扫描效率。</p>
+    <table>
+      <thead><tr><th>排序键</th><th>优先级</th><th>说明</th></tr></thead>
+      <tbody><tr><td>错误次数</td><td>第一</td><td>0错误优先于1次错误，依次类推</td></tr><tr><td>用时（秒）</td><td>第二</td><td>错误次数相同时，用时短者优先</td></tr></tbody>
+    </table>
+    <p>提示数是难度配置的一部分，不等同于绝对完成时间。同样数量的预填，如果分布集中或关键候选隐藏较深，体验仍会不同。本站简单约22格、中等约16格、困难约11格；完成用时没有固定合格区间，会随题面、熟练度、是否标候选而变化。</p>
+    <table><thead><tr><th>难度</th><th>预填配置</th><th>练习重点</th><th>用时理解</th></tr></thead><tbody><tr><td>简单</td><td>约22格</td><td>规则、唯一候选</td><td>通常步骤较少，不设标准秒数</td></tr><tr><td>中等</td><td>约16格</td><td>隐性唯一、候选更新</td><td>适合稳定计时练习</td></tr><tr><td>困难</td><td>约11格</td><td>数对与更长排除链</td><td>停顿增加属正常，不以猜测换速度</td></tr></tbody></table>
+    <h2>难度与错误上限</h2>
+    <p>三档难度各有不同的提示数（预填数字）和错误上限。提示数越多越容易起步；错误上限控制本局结束条件。</p>
+    <table>
+      <thead><tr><th>难度</th><th>预填数字</th><th>错误上限</th><th>说明</th></tr></thead>
+      <tbody><tr><td>简单</td><td>约22格</td><td>3次</td><td>预填多，适合新手熟悉规则</td></tr><tr><td>中等</td><td>约16格</td><td>3次</td><td>推理量适中，日常练习推荐</td></tr><tr><td>困难</td><td>约11格</td><td>2次</td><td>空格多，需要候选数技巧</td></tr></tbody>
+    </table>
+    <h2>计算示例</h2>
+    <p>假设同一档难度下有三条完成成绩：</p>
+    <ol><li>成绩A：0错误，用时150秒。</li><li>成绩B：0错误，用时210秒。</li><li>成绩C：1错误，用时90秒。</li></ol>
+    <p>排序结果：A第一、B第二、C第三。虽然C用时最短，但错误次数更多，所以排在两位零错误成绩之后。</p>
+    <table><thead><tr><th>最终名次</th><th>成绩</th><th>错误</th><th>用时</th><th>排序理由</th></tr></thead><tbody><tr><td>1</td><td>A</td><td>0</td><td>150秒</td><td>零错误中更快</td></tr><tr><td>2</td><td>B</td><td>0</td><td>210秒</td><td>仍优先于有错误成绩</td></tr><tr><td>3</td><td>C</td><td>1</td><td>90秒</td><td>错误更多，速度不参与跨错误档比较</td></tr></tbody></table>
+    <h2>怎样提高排名？</h2>
+    <p>错误优先于时间，所以先保证推理准确，再追求速度。稳定通关当前难度并保持零错误后，再切换到下一档难度；盲目速填一旦触发错误上限会直接结束本局，反而没有成绩。</p>
+    <div class="callout">排行榜成绩保存在浏览器本地存储中，不会上传服务器；清除浏览器数据后成绩会消失。每档难度最多显示10条。</div>
+    <h2>排行榜存储与隐私</h2><p>成绩按难度写入当前浏览器的localStorage。页面读取这些本地记录并排序，不要求姓名或账号，也不会把排行榜上传到服务器。不同浏览器、不同设备拥有各自独立的记录。</p><p>清除浏览器缓存时若同时删除网站数据，排行榜也会被清空；无痕窗口关闭后通常无法保留。若希望长期比较，可自行记录日期、难度、错误和用时，不应把本地榜单当作跨设备云存档。</p>
+    <h2>常见计分疑问</h2><h3>用时很短，为什么仍排在后面？</h3><p>先检查错误次数。只要错误更多，就排在错误更少的成绩之后；只有错误相同时才比较秒数。</p><h3>不同难度能放在一起比较吗？</h3><p>不能。三档题目的预填数量、错误上限和推理要求不同，排行榜分档保存，名次只在同一难度内计算。</p><h3>未完成的对局会进入排行榜吗？</h3><p>不会。排序对象是完成成绩；达到错误上限导致本局结束，不会产生有效完成记录。</p>
+    <h2>怎样公平比较自己的进步？</h2><p>只比较同一难度，并同时记录错误和用时。先观察零错误完成是否稳定，再比较相近状态下的秒数；如果为了提速增加错误，排行榜也会把该成绩放到后面。</p><p>本地榜单适合观察个人在当前浏览器中的练习变化，不代表与其他玩家的公开竞赛。题面不同也会影响推理路径，因此一次快成绩不等同于所有题目都达到相同水平。</p>
+    <nav class="content-nav" aria-label="相关指南"><a href="/rules/">查看6×6规则</a><a href="/strategies/">学习解题策略</a><a href="/#mini-sudoku-game">进入在线游戏</a></nav>
+    <p class="meta">本站游戏为自研纯前端实现，规则核对日期：<time datetime="2026-09-06">2026年9月6日</time></p>
+  </main>
+  <footer><nav class="footer-links" aria-label="页脚导航"><a href="/">首页</a><a href="/about/">关于我们</a><a href="/privacy/">隐私政策</a><a href="/editorial-policy/">编辑政策</a></nav><span>Mini Sudoku 数独微站</span></footer>
+</body>
+</html>

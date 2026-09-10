@@ -1,0 +1,34 @@
+# Mini Sudoku 数独微站
+
+> 6×6 Mini Sudoku 中文专题网站：提供本站自研的在线数独游戏、规则说明、解题策略与排行榜计分方式。游戏与全部内容均为本站自研，谜题经唯一解校验。
+
+## Primary page
+
+- [6×6 Mini Sudoku 在线游戏](https://deskgamehub.site/): 自研 6×6 数独游戏，三档难度（简单/中等/困难）、候选数铅笔标记、计时与本地排行榜，并附规则、策略与 FAQ。
+
+## 内容页面
+
+- [21天每日练习计划](https://deskgamehub.site/practice-plan/): 从规则与唯一候选开始，进阶到数对排除和计时挑战，包含每周训练量、自测标准与停滞期对策。
+- [数独变体对比](https://deskgamehub.site/variants/): 对比4×4、6×6、9×6与9×9数独的格子数、宫形状、数字范围、适合人群，并提供从6×6升级到9×9的练习路径。
+- [每日一题](https://deskgamehub.site/daily/): 每天一道中等难度 6×6 数独，基于日期确定性生成、保证唯一解，可在线练或打印。
+- [打印练习表](https://deskgamehub.site/printable/): 一键生成六道可打印谜题（简单/中等/困难各两题），附答案。
+- [6×6 规则](https://deskgamehub.site/rules/): 数字1至6、行/列/2×3宫格约束、候选数与完成条件的完整说明。
+- [排行榜计分](https://deskgamehub.site/scoring/): 本地排行榜排序规则（错误优先、用时其次）、难度参数与排序示例。
+- [解题策略](https://deskgamehub.site/strategies/): 唯一候选、隐性唯一候选、裸数对、指向数对与宫线排除五种方法。
+- [常见问题 FAQ](https://deskgamehub.site/faq/): 解答6×6数独入门、玩法、每日题、唯一解、本地数据与收费问题。
+- [唯一候选与隐性唯一](https://deskgamehub.site/techniques/): 两种基础技巧的候选表、完整推演、扫描方式与练习路径。
+- [裸数对与指向数对](https://deskgamehub.site/naked-pairs/): 数对锁定、宫线联动、组合使用与常见误区详解。
+- [数据与研究方法](https://deskgamehub.site/research/): 说明组合逻辑、回溯唯一解校验、难度标定、隐私边界与未来统计口径。
+- [关于我们](https://deskgamehub.site/about/): 站点目标、编辑原则与自研游戏说明。
+- [编辑政策](https://deskgamehub.site/editorial-policy/): 选题、事实核查、AI 辅助与纠错原则。
+- [隐私政策](https://deskgamehub.site/privacy/): 广告、自研游戏本地数据与日志数据处理。
+- [使用条款](https://deskgamehub.site/terms/): 内容使用、第三方服务与免责声明。
+- [联系我们](https://deskgamehub.site/contact/): 反馈与纠错入口。
+
+## 关键事实
+
+- 本站在线游戏为自研纯前端实现，使用 6×6 棋盘、数字 1 至 6 与 2×3 宫格。
+- 生成的谜题均经过唯一解校验，不依赖猜测。
+- 排行榜按难度分档，先比较错误次数、再比较用时，每档保留前 10 条。
+- 游戏数据仅保存在浏览器本地存储（localStorage），不上传任何服务器。
+- 站点内容为中文原创，面向初学者到进阶玩家。
