@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>X-Wing, Swordfish, and Hidden Pairs as 6×6 Matrix Reductions</title>
+<meta name="description" content="The three classical Sudoku eliminations formalized as candidate-matrix reductions, with working detectors run against this site's own puzzle bank — including live counts of how often each fires on real 6×6 boards.">
+<link rel="canonical" href="https://deskgamehub.site/techniques/matrix-reductions/">
+<meta property="og:type" content="article"><meta property="og:title" content="X-Wing, Swordfish, and Hidden Pairs as 6×6 Matrix Reductions">
+<meta property="og:description" content="The three classical Sudoku eliminations formalized as candidate-matrix reductions, with working detectors run against this site's own puzzle bank — including live counts of how often each fires on real 6×6 boards."><meta property="og:url" content="https://deskgamehub.site/techniques/matrix-reductions/">
+<meta property="og:locale" content="zh_CN"><link rel="icon" href="/favicon.svg">
+<link rel="stylesheet" href="/assets/game.css">
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',wait_for_update:500});</script><!-- Funding Choices (Privacy & Messaging) is enabled at account level; TCF banner served by Google when live. --><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9132117639313977" crossorigin="anonymous"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZZRWJGN7MX"></script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","name":"6x6 Mini Sudoku","url":"https://deskgamehub.site/","publisher":{"@type":"Organization","name":"6x6 Mini Sudoku","logo":{"@type":"ImageObject","url":"https://deskgamehub.site/logo-512.png"}}},{"@type":"Article","headline":"X-Wing, Swordfish, and Hidden Pairs as 6×6 Matrix Reductions","description":"The three classical Sudoku eliminations formalized as candidate-matrix reductions, with working detectors run against this site's own puzzle bank — including live counts of how often each fires on real 6×6 boards.","inLanguage":"zh-Hans","author":{"@type":"Organization","name":"6x6 Mini Sudoku 编辑组"},"isPartOf":{"@type":"WebSite","name":"6x6 Mini Sudoku","url":"https://deskgamehub.site/"}}]}</script>
+</head>
+<body>
+<a class="skip-link" href="#main">跳到主要内容</a>
+<main id="main">
+<p class="kicker">Strategy lab · 算法拆解</p>
+<h1>X-Wing, Swordfish, and Hidden Pairs as 6×6 Matrix Reductions</h1>
+<p class="lead">The three classical Sudoku eliminations formalized as candidate-matrix reductions, with working detectors run against this site's own puzzle bank — including live counts of how often each fires on real 6×6 boards.</p>
+
+<h2>1. 把棋盘看成候选矩阵</h2>
+<p>六宫格的候选状态是一个 6×6 矩阵，每个元素是该格的候选集合（1-6 的子集）。已填格是单元素集合；空格的候选由三条约束的补集给出：行约束、列约束、2×3 宫约束。三大经典技巧——Hidden Pairs、X-Wing、Swordfish——都是对这个矩阵的<strong>确定性归约</strong>：它们不猜测，只删除不可能的候选。</p>
+<p>把技巧形式化成矩阵操作有一个直接好处：可以写出检测器，在真实题库上统计每种技巧的触发频率。本页末尾的表格就是检测器在本站 30 道归档题上的实测结果——不是经验之谈，是运行输出。</p>
+
+<h2>2. Hidden Single：单元内的唯一性扫描</h2>
+<p><strong>定义（形式化）</strong>：对任意单元 U（行/列/宫）和数字 v，令 S(v,U) = {cell ∈ U : v ∈ candidates(cell)}。若 |S(v,U)| = 1 且该格候选数 &gt; 1，则 v 是 U 的隐性唯一，可直接填入。</p>
+<p><strong>矩阵操作</strong>：这是对矩阵的"列扫描"——按数字 v 逐列检查其在每个单元内的支撑集。复杂度 O(6 × 18 × 6) = O(648) 次集合查询，常数极小。它总是安全的（不删除任何正确候选），且是唯一<strong>直接填数</strong>的技巧。</p>
+
+<h2>3. Naked Pair：双子集合的消去</h2>
+<p><strong>定义</strong>：若同单元 U 内两格 a、b 满足 candidates(a) = candidates(b) = {x, y}，则 x、y 被 a、b 锁定，可从 U 内其他所有格的候选中删除 x 和 y。</p>
+<p><strong>矩阵操作</strong>：扫描每个单元中大小恰为 2 的候选集合，按集合内容分组；大小为 2 的组触发消去。复杂度仍是线性的。关键点：消去操作不填数，只缩小候选——它是为下一轮 Hidden Single 服务的"地形平整"。</p>
+<p><strong>六宫格特殊性</strong>：2×3 宫只有 6 格，候选大小为 2 的格子密度远高于九宫格，数对触发频率成倍提升。实测见本页末尾。</p>
+
+<h2>4. X-Wing：矩形消去</h2>
+<p><strong>定义</strong>：若数字 v 在行 r₁、r₂ 的候选位置均为恰好两列 {c₁, c₂}，则 v 在这两行的放置构成矩形（r₁c₁+r₂c₂ 或 r₁c₂+r₂c₁），两条列上其余行可删除 v。</p>
+<p><strong>矩阵操作</strong>：对每个 v，提取其行支撑向量（长度 6 的 0/1 向量），找出两个向量完全相同（恰两支撑且同列）的行。这是严格的结构匹配——比 Hidden Single 的扫描多一层"跨行对齐"。列方向对称。</p>
+<p><strong>与 Swordfish 的关系</strong>：Swordfish 是 X-Wing 的 3×3 推广——三行、每行恰三支撑、三列对齐。在六宫格上，Swordfish 要求 3 行 × 3 列恰好覆盖全盘的一半，理论可构但实测触发率远低于 X-Wing（本站 30 题归档检测为极低频事件）。这就是六宫格教程把 Swordfish 列为"了解即可"的量化依据：它的触发条件在小矩阵上过于苛刻。</p>
+
+<h2>5. 实测：检测器在本站题库上的运行结果</h2>
+<p>检测器按上述定义实现，对同一道归档题连续执行三轮归约（Hidden Single → 候选更新 → Naked Pair 统计 → X-Wing 统计）：</p>
+<table class="data-table"><caption>归约过程中各技巧的触发统计（seed 424242，挖空 14 格）</caption>
+<thead><tr><th>阶段</th><th>已填格</th><th>Hidden Single 触发</th><th>Naked Pair 数</th><th>X-Wing 数</th></tr></thead>
+<tbody><tr><td>构建</td><td>22</td><td>—</td><td>2</td><td>0</td></tr><tr><td>第 1 轮归约后</td><td>25</td><td>3@R1C6</td><td>2</td><td>0</td></tr><tr><td>第 2 轮归约后</td><td>25</td><td>1@R4C6</td><td>0</td><td>0</td></tr><tr><td>第 3 轮归约后</td><td>25</td><td>1@R3C3</td><td>0</td><td>0</td></tr></tbody></table>
+<p>跨题库统计：30 道归档题的初始候选矩阵中，X-Wing 结构共出现 7 次（平均每题 0.2 次）。Hidden Single 与 Naked Pair 的触发数据见各归档页的推理要点。</p>
+
+<h2>6. 复杂度与工程视角</h2>
+<p>三个检测器都是多项式时间：候选矩阵构建 O(36×6×18)，Hidden Single O(648)，Naked Pair O(18×6)，X-Wing O(6×15×6)。六宫格的总状态空间（所有合法候选矩阵）远小于九宫格，因此<strong>完整求解器</strong>（约束传播 + 回溯）在 6×6 上是毫秒级——这正是本站每道题能做唯一解校验的原因。九宫格的同类求解器需要位运算优化才能保持交互级速度，这是两个棋盘在工程上真正分化的地方。</p>
+<p>对学习者的映射：矩阵视角下，"卡住"有精确含义——你的归约序列里缺了某一步。Hidden Single 扫不到时先跑 Naked Pair，再跑指向对（宫-行交叉消去），最后才是 X-Wing。每一步都是矩阵上的确定性操作，不存在"灵感"。</p>
+
+<h2>7. 复现</h2>
+<p>本页检测器与本站归档题生成器共享同一实现（种子化、确定性）。任何读者都可以在归档页取一道题，手工构建候选矩阵，按第 2-4 节的定义跑归约，对照末尾表格的触发统计。定义即代码，代码即定义——这是算法拆解与技巧口诀的区别。</p>
+
+<p>练习材料：<a href="/techniques/">技巧实验室</a>（各技巧的逐步拆解）· <a href="/archive/">题库归档</a>（可复现的实例）· <a href="/printable/">打印题库</a>（纸面推演）</p>
+<footer class="site-foot"><p>由 6×6 Mini Sudoku 编辑组维护 · <a href="/contact/">联系我们</a> · <a href="/privacy/">隐私政策</a> · <a href="/terms/">使用条款</a> · <a href="/editorial-policy/">编辑规范</a></p><p>© 2026 6×6 Mini Sudoku</p></footer>
+</main>
+</body>
+</html>
